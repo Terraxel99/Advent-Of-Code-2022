@@ -47,5 +47,29 @@
 
             return result;
         }
+
+        public static IEnumerable<T> MapEachLinesGroupTo<T>(string filePath, int numberOfLinesPerGroup, Func<IReadOnlyList<string>, T> fn)
+        {
+            List<T> result = new List<T>();
+            var lines = File.ReadAllLines(filePath);
+
+            List<string> group = new List<string>();
+
+            int lineNb = 0;
+
+            while (lineNb < lines.Length)
+            {
+                for (int i = 0; i < numberOfLinesPerGroup; i++)
+                {
+                    group.Add(lines[lineNb]);
+                    lineNb++;
+                }
+
+                result.Add(fn(group));
+                group.Clear();
+            }
+
+            return result;
+        }
     }
 }
